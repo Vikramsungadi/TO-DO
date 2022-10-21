@@ -52,7 +52,6 @@ html {
 #user--input {
   border-radius: 5px;
   box-shadow: rgba(193, 217, 255, 0.29) 0px 1px 7px 5px;
-  /* rgba(0, 0, 0, 0.1)  */
 }
 
 h1::selection {
@@ -143,7 +142,6 @@ body {
 }
 
 .input::placeholder {
-  font-size: large;
   font-family: "Caveat", cursive;
   font-weight: bold;
 }
@@ -239,7 +237,6 @@ button {
   opacity: 0.8;
   font-style: italic;
   font-weight: 500;
-  font-size: 1rem;
   overflow: visible;
 }
 .input--holder input::-webkit-input-placeholder {
