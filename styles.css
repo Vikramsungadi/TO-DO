@@ -47,7 +47,22 @@ html {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+#user--input {
+  border-radius: 5px;
+  box-shadow: rgba(193, 217, 255, 0.29) 0px 1px 7px 5px;
+  /* rgba(0, 0, 0, 0.1)  */
+}
 
+h1::selection {
+  background-color: var(--var--color-shadow);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: white;
+}
+p::selection {
+  background-color: var(--var--color-primary);
+  color: white;
+}
 .main {
   display: flex;
   flex-direction: column;
@@ -75,7 +90,7 @@ html {
   align-items: center;
   border-left: 4px solid rgba(0, 16, 255, 0.3);
   overflow-y: hidden;
-  color: rgb(78, 76, 76);
+  color: rgb(103, 101, 101);
   background: white;
   border-radius: 0;
   padding: 0 1.5rem;
