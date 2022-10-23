@@ -52,7 +52,6 @@ html {
 #user--input {
   border-radius: 5px;
   box-shadow: rgba(193, 217, 255, 0.29) 0px 1px 7px 5px;
-  /* rgba(0, 0, 0, 0.1)  */
 }
 
 h1::selection {
@@ -143,7 +142,6 @@ body {
 }
 
 .input::placeholder {
-  font-size: large;
   font-family: "Caveat", cursive;
   font-weight: bold;
 }
@@ -152,7 +150,6 @@ body {
   color: var(--var--color-secondary);
   display: flex;
   flex-grow: 1;
-  font-size: 1rem;
   padding-inline-start: 1rem;
   outline: none;
   border: none;
@@ -239,15 +236,9 @@ button {
   opacity: 0.8;
   font-style: italic;
   font-weight: 500;
-  font-size: 1rem;
   overflow: visible;
 }
-.input--holder input::-webkit-input-placeholder {
-  font-size: 40px;
-}
-::-moz-placeholder {
-  font-size: 1rem;
-}
+
 
 @media screen and (max-width: 550px) {
   .card-wrapper {
