@@ -16,6 +16,13 @@ main.addEventListener("click", edit);
 theme_icon.addEventListener("click", changeTheme);
 document.addEventListener("DOMContentLoaded", loadTasksFromLS);
 
+//                            Dark Mode Detection
+
+darkmode = window.matchMedia("(prefers-color-scheme: dark)");
+if (darkmode.matches) {
+  body.classList.add("dark--theme");
+}
+
 //                          CREATING TASK COMPONENT
 
 function creatingTaskComponent(text) {
@@ -37,9 +44,20 @@ function creatingTaskComponent(text) {
   main.appendChild(card);
 }
 
-//              LOADING TASKS FROM LOCAL STORAGE TO DOM
+//              LOADING  FROM LOCAL STORAGE TO DOM
 
 function loadTasksFromLS() {
+  // theme restore
+  if (localStorage.getItem("theme") !== null) {
+    theme = JSON.parse(localStorage.getItem("theme"));
+    console.log(theme);
+    if (theme === "dark") {
+      body.classList.add("dark--theme");
+    } else {
+      body.classList.remove("dark--theme");
+    }
+  }
+  // task restoration
   if (localStorage.getItem("tasks") !== null) {
     let tasks;
     tasks = JSON.parse(localStorage.getItem("tasks"));
@@ -65,7 +83,6 @@ function loadTasksFromLS() {
       icon.className = "icon";
       icon.append(check, trash, edit);
       card.append(p, icon);
-
       main.appendChild(card);
     });
   }
@@ -228,13 +245,20 @@ function UpdateTask(x, previousvalue, text) {
   });
 }
 
+//                                  Function to Change Theme
 function changeTheme(e) {
   let card_wrap = body.querySelector(".card-wrapper");
 
-  body.classList.toggle("dark--theme");
+  if (body.classList.contains("dark--theme")) {
+    body.classList.remove("dark--theme");
+    preserveTheme("light");
+  } else {
+    body.classList.add("dark--theme");
+    preserveTheme("dark");
+  }
+
   theme_icon.style.animation = "rotatee 3s";
   card_wrap.style.animation = "myfade 4s";
-
   setTimeout(() => {
     if (e.target.classList.contains("fa-sun")) {
       e.target.parentElement.innerHTML = `<i class="fa-solid fa-moon"></i>`;
@@ -247,4 +271,16 @@ function changeTheme(e) {
     theme_icon.style.animation = "";
     card_wrap.style.animation = "";
   }, 4000);
+}
+
+function preserveTheme(bool) {
+  let theme;
+  if (localStorage.getItem("theme") == null) {
+    theme = "";
+  } else {
+    console.log(theme);
+    theme = JSON.parse(localStorage.getItem("theme"));
+  }
+  theme = bool;
+  localStorage.setItem("theme", JSON.stringify(theme));
 }
