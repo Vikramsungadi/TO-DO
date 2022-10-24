@@ -1,9 +1,11 @@
+const body = document.querySelector("body");
 const button = document.querySelector(".btn");
 const taskinput = document.querySelector(".input");
 const main = document.querySelector(".main");
 const trashicon = document.querySelector("i");
 const bottomCard = document.querySelector(".bottom--card");
 const pa = document.querySelectorAll(".para");
+const theme_icon = document.querySelector(".theme");
 
 //                          Event Listeners
 
@@ -11,7 +13,7 @@ button.addEventListener("click", addTask);
 main.addEventListener("click", removeTask);
 main.addEventListener("click", checkTask);
 main.addEventListener("click", edit);
-
+theme_icon.addEventListener("click", changeTheme);
 document.addEventListener("DOMContentLoaded", loadTasksFromLS);
 
 //                          CREATING TASK COMPONENT
@@ -31,9 +33,7 @@ function creatingTaskComponent(text) {
   const icon = document.createElement("div");
   icon.className = "icon";
   icon.append(check, trash, edit);
-
   card.append(p, icon);
-
   main.appendChild(card);
 }
 
@@ -101,12 +101,16 @@ function storeTaskinLS(task) {
 //                      REMOVING TASK COMPONENT FROM DOM
 
 function removeTask(e) {
+  let bottomCardDiv = e.target.parentElement.parentElement;
   if (
-    e.target.parentElement.parentElement.classList.contains("bottom--card") &&
+    bottomCardDiv.classList.contains("bottom--card") &&
     e.target.classList.contains("fa-trash")
   ) {
-    e.target.parentElement.parentElement.remove();
-    removeTaskFromLS(e.target.parentElement.parentElement.textContent);
+    bottomCardDiv.classList.toggle("animation");
+    bottomCardDiv.addEventListener("transitionend", function () {
+      bottomCardDiv.remove();
+      removeTaskFromLS(bottomCardDiv.textContent);
+    });
   }
 }
 
@@ -126,12 +130,12 @@ function removeTaskFromLS(text) {
 //                                      MarkingTask
 
 function checkTask(e) {
+  const card = e.target.parentElement.parentElement;
   if (
-    e.target.parentElement.parentElement.classList.contains("bottom--card") &&
+    card.classList.contains("bottom--card") &&
     e.target.classList.contains("fa-circle-check")
   ) {
-    const card = e.target.parentElement.parentElement;
-    const p = e.target.parentElement.parentElement.querySelector("p");
+    const p = card.querySelector("p");
     let tasks = JSON.parse(localStorage.getItem("tasks"));
 
     if (p.classList.contains("strike")) {
@@ -205,7 +209,7 @@ function UpdateTask(x, previousvalue, text) {
       // creating div after editing
       let p = document.createElement("p");
       p.classList.add("para");
-      //        if edit opiton is enabled even after striking use below
+      //        if edit opiton is to be enabled even after striking use below
 
       // if (striked) {
       //   p.classList.add("para", "strike");
@@ -222,4 +226,25 @@ function UpdateTask(x, previousvalue, text) {
       x.append(p, div);
     }
   });
+}
+
+function changeTheme(e) {
+  let card_wrap = body.querySelector(".card-wrapper");
+
+  body.classList.toggle("dark--theme");
+  theme_icon.style.animation = "rotatee 3s";
+  card_wrap.style.animation = "myfade 4s";
+
+  setTimeout(() => {
+    if (e.target.classList.contains("fa-sun")) {
+      e.target.parentElement.innerHTML = `<i class="fa-solid fa-moon"></i>`;
+    } else if (e.target.classList.contains("fa-moon")) {
+      e.target.parentElement.innerHTML = `<i class="fa-solid fa-sun"></i>`;
+    }
+  }, 1500);
+
+  setTimeout(() => {
+    theme_icon.style.animation = "";
+    card_wrap.style.animation = "";
+  }, 4000);
 }

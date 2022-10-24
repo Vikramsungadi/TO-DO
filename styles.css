@@ -14,13 +14,60 @@ html {
   --var--color-primary: rgb(124, 160, 247);
   --var--color-secondary: rgb(124, 160, 247);
   --var--color-shadow: rgba(0, 212, 255, 0.7);
+  --icon-color: rgb(124, 160, 247);
+  --box-shadow: rgba(193, 217, 255, 0.29) 0px 1px 7px 5px;
+  --main-shadow: 0 0 15px 3px rgba(188, 216, 222, 0.203);
+  --white: #ffffff;
+  --bottom-border-color: rgb(218, 218, 218);
+  --input-border-color: rgb(218, 218, 218);
+  --left-border-color: rgba(0, 16, 255, 0.3);
+  --text-color: rgb(103, 101, 101);
+  --body-color: rgba(0, 212, 255, 0.06);
   --var--color-gradient: linear-gradient(
     90deg,
     rgba(124, 160, 247, 1) 0%,
     rgba(0, 212, 255, 1) 100%
   );
+  --opacity: 0.45;
 }
 
+.dark--theme {
+  --var--color-primary: rgb(68, 110, 207);
+  --var--color-shadow: rgb(70, 207, 235) 100%;
+  --box-shadow: rgb(9, 9, 9) 0px 0px 5px 3px;
+  --main-shadow: 0 0 15px 3px rgb(7, 7, 7);
+  --bottom-box: rgb(10, 10, 10);
+  --white: rgb(16, 16, 16);
+  --bottom-border-color: rgb(36, 36, 36);
+  --top-border-color: rgb(7, 7, 7);
+  --left-border-color: rgba(124, 160, 247, 0.7);
+  --text-color: #e7f6f2;
+  --body-color: rgb(18, 18, 18);
+  --icon-color: rgb(27, 146, 170);
+  --input-border-color: rgba(124, 160, 247, 0.13);
+  --var--color-gradient: linear-gradient(
+    90deg,
+    rgb(68, 103, 184) 0%,
+    rgb(40, 140, 160) 100%
+  );
+  --opacity: 0.2;
+}
+body {
+  animation: bodyfade 0.5s ease;
+}
+.theme {
+  font-size: 1.8rem;
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  z-index: 3;
+  transition: all 1s ease;
+}
+
+.fa-sun,
+.fa-moon {
+  backface-visibility: hidden;
+}
 .card-wrapper {
   display: flex;
   position: relative;
@@ -50,19 +97,20 @@ html {
   -webkit-text-fill-color: transparent;
 }
 #user--input {
+  position: relative;
   border-radius: 5px;
-  box-shadow: rgba(193, 217, 255, 0.29) 0px 1px 7px 5px;
+  box-shadow: var(--box-shadow);
 }
 
 h1::selection {
   background-color: var(--var--color-secondary);
   background-clip: text;
   -webkit-background-clip: text;
-  -webkit-text-fill-color: white;
+  -webkit-text-fill-color: var(--white);
 }
 p::selection {
   background-color: var(--var--color-primary);
-  color: white;
+  color: var(--white);
 }
 .main {
   display: flex;
@@ -73,35 +121,38 @@ p::selection {
   border-radius: 8px;
   width: 100%;
   overflow: hidden;
-
   max-width: 800px;
-  box-shadow: 0 0 15px 3px rgba(188, 216, 222, 0.203);
+  box-shadow: var(--main-shadow);
+  animation: fade 0.5s ease;
 }
 .top--card {
   text-align: center;
   background: var(--var--color-gradient);
-  color: white;
+  color: var(--white);
   max-height: 10rem;
   border-radius: 10px 10px 0 0;
 }
 .bottom--card {
+  box-shadow: 0 0 15px 3px var(--bottom-box);
   font-weight: 400;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-left: 4px solid rgba(0, 16, 255, 0.3);
+  border-left: 4px solid var(--left-border-color);
   overflow-y: hidden;
-  color: rgb(103, 101, 101);
-  background: white;
+  color: var(--text-color);
+  background: var(--white);
   border-radius: 0;
   padding: 0 1.5rem;
   opacity: 1;
-  transition: all 0.5s;
-  border-bottom: 0.1px solid rgb(218, 218, 218);
+  transition: all 0.5s ease-in;
+  border-top: 0.1px solid var(--top-border-color);
+  border-bottom: 0.1px solid var(--bottom-border-color);
+  animation: fade 0.5s ease;
 }
 .strike--card {
-  opacity: 0.5;
-  transform: scaleZ(15px);
+  opacity: var(--opacity);
+  transform: scale(0.99999);
 }
 .strike--card .icon {
   transition: all 0.3s ease-in-out;
@@ -112,13 +163,13 @@ p::selection {
 }
 
 i {
-  color: var(--var--color-primary);
+  color: var(--icon-color);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 i:hover,
 i:focus {
-  color: var(--var--color-shadow);
+  color: var(--var--color-primary);
 }
 i:hover ~ .icon {
   transform: translateY(5px);
@@ -138,7 +189,8 @@ i:hover ~ .icon {
 }
 
 body {
-  background: rgba(0, 212, 255, 0.06);
+  background: var(--body-color);
+  overflow-x: hidden;
 }
 
 .input::placeholder {
@@ -146,13 +198,17 @@ body {
   font-weight: bold;
 }
 .input {
+  background-color: var(--white);
+  width: 50%;
   caret-color: var(--var--color-secondary);
   color: var(--var--color-secondary);
   display: flex;
   flex-grow: 1;
+  height: 2.5rem;
   padding-inline-start: 1rem;
   outline: none;
   border: none;
+  font-size: 1.25rem;
 }
 .input2 {
   flex-grow: 1;
@@ -164,8 +220,9 @@ body {
 .input--holder {
   width: 100%;
   padding: 2px;
-  background: white;
-  border-bottom: 0.1px solid rgb(218, 218, 218);
+  background: var(--white);
+  border-bottom: 0.1px solid var(--bottom-border-color);
+  border: 0.1px solid var(--input-border-color);
 }
 .bottom--card .input--holder input {
   padding: 13px;
@@ -188,7 +245,7 @@ button {
   font-weight: 700;
   cursor: pointer;
   border-radius: 5px;
-  color: white;
+  color: var;
   text-align: center;
   padding: 0.4rem 1.4rem;
   background: var(--var--color-gradient);
@@ -239,8 +296,11 @@ button {
   overflow: visible;
 }
 
-
 @media screen and (max-width: 550px) {
+  .theme {
+    top: 20px;
+    right: 20px;
+  }
   .card-wrapper {
     margin: auto;
     padding: 0 1rem;
@@ -275,7 +335,7 @@ button {
   .input--holder {
     overflow: hidden;
     padding: 2px;
-    background: white;
+    background: var(--white);
   }
 
   .todo {
@@ -292,7 +352,7 @@ button {
   .btn--div input {
     width: 100%;
     padding-bottom: 5px;
-    border-bottom: 0.1px solid rgb(218, 218, 218);
+    border-bottom: 0.1px solid var(--bottom-border-color);
     display: block;
   }
   .btn--div .btn {
@@ -303,4 +363,72 @@ button {
 }
 .none {
   display: none;
+}
+
+.animation {
+  z-index: -3;
+  transform: scale(0.95);
+  transform: translateY(60px);
+}
+
+@keyframes myfade {
+  0% {
+    opacity: 0;
+  }
+  70% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes fade {
+  0% {
+    opacity: 0;
+    translate: 0 -40px 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  60% {
+    translate: 0 20px 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes bodyfade {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes rotatee {
+  0% {
+    rotate: 0deg;
+    opacity: 1;
+  }
+  25% {
+    opacity: 0.5;
+  }
+  50% {
+    rotate: 720deg;
+    opacity: 0;
+  }
+
+  75% {
+    opacity: 0.5;
+  }
+  100% {
+    rotate: 0deg;
+    opacity: 1;
+  }
 }
