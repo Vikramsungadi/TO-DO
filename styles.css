@@ -133,6 +133,7 @@ p::selection {
   border-radius: 10px 10px 0 0;
 }
 .bottom--card {
+  position: relative;
   box-shadow: 0 0 15px 3px var(--bottom-box);
   font-weight: 400;
   display: flex;
@@ -148,7 +149,7 @@ p::selection {
   transition: all 0.5s ease-in;
   border-top: 0.1px solid var(--top-border-color);
   border-bottom: 0.1px solid var(--bottom-border-color);
-  animation: fade 0.5s ease;
+  animation: fade 0.3s ease;
 }
 .strike--card {
   opacity: var(--opacity);
@@ -257,6 +258,7 @@ button {
   transform: scale(1.08);
 }
 .icon {
+  position: relative;
   display: flex;
   gap: 1rem;
   margin-left: 10px;
@@ -265,7 +267,27 @@ button {
 .strike {
   text-decoration: line-through;
 }
+.time {
+  position: absolute;
+  font-size: 0.5rem;
+  /* bottom: 20px;
+  right: 110px;
+  opacity: 0.6;
+  rotate: -90deg; */
+  right: 25px;
+  opacity: 0.4;
+  top: 2px;
+  rotate: 0deg;
+}
 
+/* .time {
+  position: absolute;
+  bottom: -10px;
+  right: -22px;
+  font-size: 0.55rem;
+  opacity: 0.6;
+  rotate: -45deg;
+} */
 /* width */
 ::-webkit-scrollbar {
   height: 2px;
@@ -342,6 +364,17 @@ button {
     margin: 2rem 2rem;
     width: 97%;
     margin: 0 auto;
+  }
+  /* .time {
+    right: 90px;
+    opacity: 0.4;
+  } */
+
+  .time {
+    right: 6px;
+    opacity: 0.4;
+    top: 2px;
+    rotate: 0deg;
   }
 }
 

@@ -39,8 +39,12 @@ function creatingTaskComponent(text) {
   edit.className = "fa-solid fa-pen-to-square";
   const icon = document.createElement("div");
   icon.className = "icon";
-  icon.append(check, trash, edit);
-  card.append(p, icon);
+  const span = document.createElement("span");
+  span.classList.add("time");
+  const time = getDateTime(Date());
+  span.innerText = time;
+  icon.append(check, trash, edit, span);
+  card.append(p, icon, span);
   main.appendChild(card);
 }
 
@@ -50,7 +54,6 @@ function loadTasksFromLS() {
   // theme restore
   if (localStorage.getItem("theme") !== null) {
     theme = JSON.parse(localStorage.getItem("theme"));
-    console.log(theme);
     if (theme === "dark") {
       body.classList.add("dark--theme");
     } else {
@@ -81,14 +84,17 @@ function loadTasksFromLS() {
       edit.className = "fa-solid fa-pen-to-square";
       const icon = document.createElement("div");
       icon.className = "icon";
+      const span = document.createElement("span");
+      span.classList.add("time");
+      span.innerText = getDateTime(task.time);
       icon.append(check, trash, edit);
-      card.append(p, icon);
+      card.append(p, icon, span);
       main.appendChild(card);
     });
   }
 }
 
-//                          ADDING TASK TO DOM
+//                          ADDING TASK TO DOM and STORING TO LS
 
 function addTask() {
   if (taskinput.value === "") {
@@ -100,8 +106,6 @@ function addTask() {
   }
 }
 
-//                     STORING USER GIVEN TASK IN LOCAL STORAGE
-
 function storeTaskinLS(task) {
   let tasks;
   if (localStorage.getItem("tasks") === null) {
@@ -109,7 +113,7 @@ function storeTaskinLS(task) {
   } else {
     tasks = JSON.parse(localStorage.getItem("tasks"));
   }
-  obj = { Text: task, strike: false };
+  obj = { Text: task, strike: false, time: new Date() };
   tasks.push(obj);
 
   localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -119,6 +123,7 @@ function storeTaskinLS(task) {
 
 function removeTask(e) {
   let bottomCardDiv = e.target.parentElement.parentElement;
+  let paratext = bottomCardDiv.querySelector("p");
   if (
     bottomCardDiv.classList.contains("bottom--card") &&
     e.target.classList.contains("fa-trash")
@@ -126,12 +131,12 @@ function removeTask(e) {
     bottomCardDiv.classList.toggle("animation");
     bottomCardDiv.addEventListener("transitionend", function () {
       bottomCardDiv.remove();
-      removeTaskFromLS(bottomCardDiv.textContent);
+      removeTaskFromLS(paratext.textContent);
     });
   }
 }
 
-//                   function for REMOVING TASK INPUT IN LOCAL STORAGE
+//removing task func
 
 function removeTaskFromLS(text) {
   let tasks;
@@ -224,6 +229,8 @@ function UpdateTask(x, previousvalue, text) {
       localStorage.setItem("tasks", JSON.stringify(tasks));
 
       // creating div after editing
+      let span = document.createElement("span");
+      span.innerText = getDateTime(data);
       let p = document.createElement("p");
       p.classList.add("para");
       //        if edit opiton is to be enabled even after striking use below
@@ -240,7 +247,7 @@ function UpdateTask(x, previousvalue, text) {
                     ><i class="fa-solid fa-trash"></i><i class="fa-solid fa-pen-to-square">`;
 
       x.innerHTML = "";
-      x.append(p, div);
+      x.append(p, div, span);
     }
   });
 }
@@ -284,3 +291,21 @@ function preserveTheme(bool) {
   theme = bool;
   localStorage.setItem("theme", JSON.stringify(theme));
 }
+
+//                                    TIME STAMP
+function getDateTime(data) {
+  let weekday = {
+    0: "Sun",
+    1: "Mon",
+    2: "Tue",
+    3: "Wed",
+    4: "Thu",
+    5: "Fri",
+    6: "Sat",
+    7: "Sat",
+  };
+
+  const date = new Date(data);
+  return `${date.toTimeString().slice(0, 5)} `;
+}
+//${weekday[date.getDay()]}
