@@ -67,9 +67,11 @@ function loadTasksFromLS() {
   if (localStorage.getItem("theme") !== null) {
     theme = JSON.parse(localStorage.getItem("theme"));
     if (theme === "dark") {
+      theme_icon.innerHTML = '<i class="fa-solid fa-moon"></i>';
       body.classList.add("dark--theme");
     } else {
       body.classList.remove("dark--theme");
+      theme_icon.innerHTML = '<i class="fa-solid fa-sun"></i>';
     }
   }
   // task restoration
