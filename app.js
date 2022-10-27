@@ -6,6 +6,12 @@ const trashicon = document.querySelector("i");
 const bottomCard = document.querySelector(".bottom--card");
 const pa = document.querySelectorAll(".para");
 const theme_icon = document.querySelector(".theme");
+const dropdown = document.querySelector(".dropdown");
+const bottomCards = document.querySelector(".main");
+const overlay = document.querySelector(".overlay");
+const app = document.querySelector(".app");
+const option = document.querySelector(".option");
+const dropinput = document.querySelector(".drop-input");
 
 //                          Event Listeners
 
@@ -15,6 +21,8 @@ main.addEventListener("click", checkTask);
 main.addEventListener("click", edit);
 theme_icon.addEventListener("click", changeTheme);
 document.addEventListener("DOMContentLoaded", loadTasksFromLS);
+dropinput.addEventListener("click", toggling);
+option.addEventListener("click", filter);
 
 //                            Dark Mode Detection
 
@@ -25,7 +33,7 @@ if (darkmode.matches) {
 
 //                          CREATING TASK COMPONENT
 
-function creatingTaskComponent(text) {
+function creatingTaskComponent(text, id) {
   const card = document.createElement("div");
   card.classList.add("top--card", "bottom--card");
   const p = document.createElement("p");
@@ -40,11 +48,15 @@ function creatingTaskComponent(text) {
   const icon = document.createElement("div");
   icon.className = "icon";
   const span = document.createElement("span");
+  const span2 = document.createElement("span");
   span.classList.add("time");
+  span2.classList.add("id");
   const time = getDateTime(Date());
   span.innerText = time;
+  span2.innerText = id;
+
   icon.append(check, trash, edit, span);
-  card.append(p, icon, span);
+  card.append(p, icon, span, span2);
   main.appendChild(card);
 }
 
@@ -85,10 +97,13 @@ function loadTasksFromLS() {
       const icon = document.createElement("div");
       icon.className = "icon";
       const span = document.createElement("span");
+      const span2 = document.createElement("span");
       span.classList.add("time");
+      span2.classList.add("id");
+      span2.innerText = task.id;
       span.innerText = getDateTime(task.time);
       icon.append(check, trash, edit);
-      card.append(p, icon, span);
+      card.append(p, icon, span, span2);
       main.appendChild(card);
     });
   }
@@ -98,51 +113,102 @@ function loadTasksFromLS() {
 
 function addTask() {
   if (taskinput.value === "") {
-    alert("Add a Task");
+    //creating modal
+    let modal = document.createElement("div");
+    let div = document.createElement("div");
+    let span1 = document.createElement("span");
+    let span2 = document.createElement("span");
+    let i = document.createElement("i");
+    let i2 = document.createElement("i");
+    let p = document.createElement("p");
+
+    i.classList.add("fa-solid", "fa-xmark");
+    modal.classList.add("modal");
+    i2.classList.add("fa-solid", "fa-pen");
+    p.innerText = "Write something to add.....";
+    span1.classList.add("close");
+    span2.classList.add("pen");
+
+    span1.append(i);
+    span2.append(i2);
+    div.append(span2, p);
+    modal.append(span1, div);
+    overlay.append(modal);
+    app.classList.add("modalopened");
+
+    return closingModal();
   } else {
-    creatingTaskComponent(taskinput.value);
-    storeTaskinLS(taskinput.value);
+    valueid = storeTaskinLS(taskinput.value);
+    creatingTaskComponent(taskinput.value, valueid);
     taskinput.value = "";
   }
 }
+// function for closing modal
+function closingModal() {
+  const closed = document.querySelector(".close");
+  closed.addEventListener("click", (e) => {
+    let modal = e.target.parentElement.parentElement;
 
-function storeTaskinLS(task) {
+    if (modal.classList.contains("modal")) {
+      modal.classList.toggle("fadeoutt");
+      app.classList.remove("modalopened");
+
+      setTimeout(() => {
+        modal.remove();
+      }, 770);
+    }
+  });
+}
+
+function storeTaskinLS(enteredText) {
   let tasks;
   if (localStorage.getItem("tasks") === null) {
     tasks = [];
   } else {
     tasks = JSON.parse(localStorage.getItem("tasks"));
   }
-  obj = { Text: task, strike: false, time: new Date() };
+
+  if (tasks.length === 0) {
+    obj = { Text: enteredText, strike: false, time: new Date(), id: 1 };
+  } else {
+    let id = tasks[tasks.length - 1].id;
+    obj = { Text: enteredText, strike: false, time: new Date(), id: id + 1 };
+  }
+
   tasks.push(obj);
+  x = obj.id;
 
   localStorage.setItem("tasks", JSON.stringify(tasks));
+  return x;
 }
 
 //                      REMOVING TASK COMPONENT FROM DOM
 
 function removeTask(e) {
   let bottomCardDiv = e.target.parentElement.parentElement;
+  let cardId = bottomCardDiv.querySelector(".id");
+
   let paratext = bottomCardDiv.querySelector("p");
   if (
     bottomCardDiv.classList.contains("bottom--card") &&
     e.target.classList.contains("fa-trash")
   ) {
     bottomCardDiv.classList.toggle("animation");
+
     bottomCardDiv.addEventListener("transitionend", function () {
       bottomCardDiv.remove();
-      removeTaskFromLS(paratext.textContent);
+      removeTaskFromLS(cardId.innerText);
     });
   }
 }
 
 //removing task func
 
-function removeTaskFromLS(text) {
+function removeTaskFromLS(id) {
   let tasks;
   tasks = JSON.parse(localStorage.getItem("tasks"));
   tasks.forEach(function (task, index) {
-    if (text === task.Text) {
+    if (parseInt(id) === task.id) {
       tasks.splice(index, 1);
     }
     localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -153,6 +219,7 @@ function removeTaskFromLS(text) {
 
 function checkTask(e) {
   const card = e.target.parentElement.parentElement;
+  let cardId = card.querySelector(".id");
   if (
     card.classList.contains("bottom--card") &&
     e.target.classList.contains("fa-circle-check")
@@ -163,21 +230,21 @@ function checkTask(e) {
     if (p.classList.contains("strike")) {
       p.classList.remove("strike");
       card.classList.remove("strike--card");
-      storeStrikesToLS(p.textContent);
+      storeStrikesToLS(cardId.innerText);
     } else {
       p.classList.add("strike");
       card.classList.add("strike--card");
-      storeStrikesToLS(p.textContent);
+      storeStrikesToLS(cardId.innerText);
     }
   }
 }
 
 //                    Storing Marked Tasks to LS
 
-function storeStrikesToLS(text) {
+function storeStrikesToLS(id) {
   let tasks = JSON.parse(localStorage.getItem("tasks"));
   tasks.forEach(function (task) {
-    if (task.Text === text) {
+    if (task.id === parseInt(id)) {
       if (task.strike === true) {
         task.strike = false;
       } else {
@@ -197,8 +264,10 @@ function edit(e) {
     grandparent.classList.contains("bottom--card", "top--card") &&
     e.target.classList.contains("fa-pen-to-square")
   ) {
-    let p = parent.previousElementSibling;
-    let textp = p.textContent;
+    let idspan = grandparent.querySelector(".id");
+    let value_id = idspan.innerText;
+    let p = grandparent.querySelector("p");
+    let textp = p.innerText;
 
     grandparent.innerHTML = `<div class="input--holder">
           <div class="btn--div">
@@ -209,10 +278,12 @@ function edit(e) {
 
     return main.addEventListener("click", function (e) {
       if (e.target.classList.contains("btn2")) {
-        let text = e.target.previousElementSibling.value;
+        let bottomcard = e.target.parentElement.parentElement.parentElement;
+        let input = bottomcard.querySelector("input");
+        let UpdatedText = input.value;
         let x = e.target.closest(".bottom--card");
 
-        UpdateTask(x, textp, text);
+        UpdateTask(x, value_id, UpdatedText);
       }
     });
   }
@@ -220,21 +291,26 @@ function edit(e) {
 
 //                           function for Updating task in LS and DOM
 
-function UpdateTask(x, previousvalue, text) {
+function UpdateTask(x, value_id, text) {
   let tasks = JSON.parse(localStorage.getItem("tasks"));
   tasks.forEach(function (task) {
-    if (task.Text === previousvalue) {
+    if (task.id === parseInt(value_id)) {
       task.Text = text;
-      let striked = task.strike;
       localStorage.setItem("tasks", JSON.stringify(tasks));
 
       // creating div after editing
       let span = document.createElement("span");
-      span.innerText = getDateTime(data);
+      let span2 = document.createElement("span");
       let p = document.createElement("p");
+      span.classList.add("time");
+      span2.classList.add("id");
+      span.innerText = getDateTime(Date());
+      span2.innerText = value_id;
       p.classList.add("para");
+
       //        if edit opiton is to be enabled even after striking use below
 
+      // let striked = task.strike;
       // if (striked) {
       //   p.classList.add("para", "strike");
       // } else {
@@ -247,7 +323,8 @@ function UpdateTask(x, previousvalue, text) {
                     ><i class="fa-solid fa-trash"></i><i class="fa-solid fa-pen-to-square">`;
 
       x.innerHTML = "";
-      x.append(p, div, span);
+      x.append(p, div, span, span2);
+      return;
     }
   });
 }
@@ -285,7 +362,6 @@ function preserveTheme(bool) {
   if (localStorage.getItem("theme") == null) {
     theme = "";
   } else {
-    console.log(theme);
     theme = JSON.parse(localStorage.getItem("theme"));
   }
   theme = bool;
@@ -307,5 +383,52 @@ function getDateTime(data) {
 
   const date = new Date(data);
   return `${date.toTimeString().slice(0, 5)} `;
+  //${weekday[date.getDay()]}
 }
-//${weekday[date.getDay()]}
+
+//                                          FILTER FUNCTION
+
+function filter(e) {
+  option.classList.toggle("none");
+
+  let todos = Array.from(bottomCards.children);
+  todos.forEach(function (todo) {
+    if (todo.classList.contains("none")) {
+      todo.classList.remove("none");
+    }
+  });
+  choice = e.target.innerText;
+  dropinput.value = choice;
+  switch (choice) {
+    case "All":
+      todos.forEach(function (todo) {
+        if (todo.classList.contains("none")) {
+          todo.classList.remove("none");
+        }
+      });
+      break;
+
+    case "Completed":
+      todos.forEach(function (todo) {
+        if (!todo.classList.contains("strike--card")) {
+          todo.classList.add("none");
+        }
+      });
+      break;
+
+    case "Incompleted":
+      todos.forEach(function (todo) {
+        if (todo.classList.contains("strike--card")) {
+          todo.classList.add("none");
+        }
+      });
+      break;
+    default:
+      break;
+  }
+}
+function toggling(e) {
+  if (e.target.classList.contains("drop-input")) {
+    option.classList.toggle("none");
+  }
+}

@@ -14,28 +14,37 @@
     <title>Simple todo</title>
   </head>
   <body>
-    <div class="theme"><i class="fa-solid fa-sun"></i></div>
-    <div class="card-wrapper">
-      <div class="todo">
-        <div class="heading">
-          <h1>todo</h1>
-        </div>
-        <div id="user--input" class="input--holder">
-          <div class="btn--div">
-            <input class="input" placeholder="Add Task" type="text" />
-            <button type="submit" class="btn">ADD</button>
+    <div class="overlay"></div>
+    <div class="app">
+      <div class="theme"><i class="fa-solid fa-sun"></i></div>
+      <div class="card-wrapper">
+        <div class="todo">
+          <div class="heading">
+            <h1>todo</h1>
           </div>
-        </div>
-        <div class="main">
-          <!-- <div class="top--card bottom--card">
-            <p class="para">Hello World</p>
-            <div class="icon">
-              <i class="fa-regular fa-circle-check"></i
-              ><i class="fa-solid fa-trash"></i
-              ><i class="fa-solid fa-pen-to-square"></i>
+          <div class="selectt">
+            <input type="text" class="drop-input" value="All" readonly />
+
+            <div class="option none">
+              <div class="choices">All</div>
+              <div class="choices">Completed</div>
+              <div class="choices">Incompleted</div>
             </div>
-            <span class="time">09:19</span>
+          </div>
+          <!-- <div class="select--div">
+            <select class="dropdown" name="Filter">
+              <option value="all">All</option>
+              <option value="completed">Completed</option>
+              <option value="incompleted">Incompleted</option>
+            </select>
           </div> -->
+          <div id="user--input" class="input--holder">
+            <div class="btn--div">
+              <input class="input" placeholder="Add Task" type="text" />
+              <button type="submit" class="btn">ADD</button>
+            </div>
+          </div>
+          <div class="main"></div>
         </div>
       </div>
     </div>

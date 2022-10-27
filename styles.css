@@ -12,6 +12,7 @@ html {
 }
 :root {
   --var--color-primary: rgb(124, 160, 247);
+  --var--color-primary-light: rgba(124, 160, 247, 0.5);
   --var--color-secondary: rgb(124, 160, 247);
   --var--color-shadow: rgba(0, 212, 255, 0.7);
   --icon-color: rgb(124, 160, 247);
@@ -33,6 +34,7 @@ html {
 
 .dark--theme {
   --var--color-primary: rgb(68, 110, 207);
+  --var--color-primary-light: rgba(124, 160, 247, 0.15);
   --var--color-shadow: rgb(70, 207, 235) 100%;
   --box-shadow: rgb(9, 9, 9) 0px 0px 5px 3px;
   --main-shadow: 0 0 15px 3px rgb(7, 7, 7);
@@ -79,11 +81,13 @@ body {
   overflow: visible;
 }
 .todo {
+  position: relative;
   width: 100%;
   max-width: 800px;
   margin-right: 2rem;
 }
 .heading {
+  position: relative;
   font-family: "Caveat", cursive;
   margin-bottom: 2rem;
   text-align: center;
@@ -96,6 +100,11 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+.select--div {
+  font-family: "Caveat", cursive;
+  margin-bottom: 5px;
+}
+
 #user--input {
   position: relative;
   border-radius: 5px;
@@ -122,6 +131,7 @@ p::selection {
   width: 100%;
   overflow: hidden;
   max-width: 800px;
+  /* transition: all 0.7s ease; */
   box-shadow: var(--main-shadow);
   animation: fade 0.5s ease;
 }
@@ -146,10 +156,10 @@ p::selection {
   border-radius: 0;
   padding: 0 1.5rem;
   opacity: 1;
-  transition: all 0.5s ease-in;
+  transition: all 0.7s ease-out;
   border-top: 0.1px solid var(--top-border-color);
   border-bottom: 0.1px solid var(--bottom-border-color);
-  animation: fade 0.3s ease;
+  animation: fade 0.5s ease-out;
 }
 .strike--card {
   opacity: var(--opacity);
@@ -193,7 +203,9 @@ body {
   background: var(--body-color);
   overflow-x: hidden;
 }
-
+.anim {
+  transition: all 0.5s ease;
+}
 .input::placeholder {
   font-family: "Caveat", cursive;
   font-weight: bold;
@@ -218,12 +230,15 @@ body {
 .input:focus ~ .btn--div {
   box-shadow: 0 0 10px 1px var(--var--color-shadow);
 }
-.input--holder {
+#user--input.input--holder {
   width: 100%;
   padding: 2px;
   background: var(--white);
-  border-bottom: 0.1px solid var(--bottom-border-color);
   border: 0.1px solid var(--input-border-color);
+}
+.input--holder {
+  width: 100%;
+  background: var(--white);
 }
 .bottom--card .input--holder input {
   padding: 13px;
@@ -288,6 +303,51 @@ button {
   opacity: 0.6;
   rotate: -45deg;
 } */
+
+/*                                       DropDown */
+
+select {
+  border: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -ms-appearance: none;
+}
+
+.dropdown,
+option {
+  font-size: 0.8rem;
+  font-family: "Signika", cursive;
+  color: var(--white);
+  background-color: var(--white);
+  color: var(--var--color-primary);
+  width: 100px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 0.1px solid var(--input-border-color);
+}
+.dropdown--div {
+  display: flex;
+}
+
+.options--div {
+  display: flex;
+}
+option:hover {
+  color: var(--var--color-shadow);
+  background-color: var(--icon-color);
+}
+select:focus-visible {
+  outline: none;
+  border: 1px solid var(--var--color-primary);
+}
+option:focus-visible {
+  outline: none;
+  border: 1px solid var(--var--color-primary);
+}
+
+/*                                              ScrollBar                                                             */
+
 /* width */
 ::-webkit-scrollbar {
   height: 2px;
@@ -401,7 +461,10 @@ button {
 .animation {
   z-index: -3;
   transform: scale(0.95);
-  transform: translateY(60px);
+  transform: translateY(54px);
+}
+.main--animation {
+  transform: translateY(-54px);
 }
 
 @keyframes myfade {
@@ -418,14 +481,28 @@ button {
 @keyframes fade {
   0% {
     opacity: 0;
+    translate: 0 -50px 0;
+  }
+  50% {
+    opacity: 0.3;
+    translate: 0 20px 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes addfade {
+  0% {
+    opacity: 0;
     translate: 0 -40px 0;
   }
   50% {
     opacity: 0.5;
+    translate: 0 -15px 0;
   }
-  60% {
-    translate: 0 20px 0;
-  }
+
   100% {
     opacity: 1;
   }
@@ -464,4 +541,151 @@ button {
     rotate: 0deg;
     opacity: 1;
   }
+}
+
+/*                                            MODAL                                                          */
+
+.modal.none {
+  display: none;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+}
+
+.modal p {
+  display: block;
+  /* background-color: var(--var--color-shadow); */
+}
+.app {
+  transition: all 0.5s ease;
+}
+.modalopened {
+  /* pointer-events: none; */
+  opacity: 0.3;
+}
+.modal {
+  align-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  color: var(--var--color-primary);
+  text-align: center;
+  background-color: var(--white);
+  border: 1px solid var(--left-border-color);
+  width: 250px;
+  height: 130px;
+  border-radius: 20px;
+  z-index: 20;
+  animation: fadein 0.5s ease;
+}
+.pen {
+  font-size: 3rem;
+}
+
+.close {
+  font-size: 1.2rem;
+  position: absolute;
+  top: 11px;
+  right: 13px;
+}
+.fadeoutt {
+  animation: fadeout 0.8s ease;
+  /* change animation duration in js too */
+}
+
+@keyframes fadeout {
+  0% {
+    scale: 1.5;
+    opacity: 1;
+  }
+
+  90% {
+    opacity: 0;
+  }
+
+  100% {
+    scale: 0;
+  }
+}
+
+@keyframes fadein {
+  0% {
+    scale: 0.7;
+    opacity: 0.8;
+  }
+  50% {
+    scale: 1.3;
+    opacity: 1;
+  }
+  100% {
+    scale: 1;
+  }
+}
+
+/* DropDown */
+
+.selectt {
+  top: 113px;
+  bottom: 0;
+  position: absolute;
+  z-index: 55;
+  font-size: 0.9rem;
+  color: var(--var--color-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  max-width: 110px;
+}
+.drop-input {
+  color: var(--var--color-primary);
+  border-radius: 5px;
+  background-color: var(--white);
+  padding: 6px;
+  width: 100%;
+  border: 1px solid var(--var--color-primary-light);
+  transition: all 0.5s ease;
+}
+.option div {
+  display: inline-block;
+  padding: 6px;
+  border-bottom: 1px solid var(--var--color-primary-light);
+}
+.option div:hover {
+  background-color: var(--var--color-primary);
+  color: white;
+}
+.option {
+  background-color: var(--white);
+  border: 1px solid var(--var--color-primary-light);
+
+  border-radius: 5px;
+
+  display: flex;
+  flex-direction: column;
+  animation: myfade 0.3s ease-in-out;
+}
+.option div:last-of-type {
+  border: none;
+}
+.option .selectt input {
+  display: inline-block;
+  border: none;
+}
+
+.drop-input:focus-visible {
+  outline: none;
+}
+
+.option.none {
+  display: none;
+}
+
+.id {
+  display: none;
 }
